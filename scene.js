@@ -4,6 +4,7 @@ const Axios = require("axios").default;
 const moment = require("moment");
 
 moment.locale("id");
+const dateNow = moment().format("dddd, Do MMMM YYYY");
 //home
 const home = new Scene("home");
 home.enter(({ reply }) => {
@@ -29,15 +30,11 @@ const covidRes = (location, data) => {
   }`;
 };
 const covid = new Scene("covid");
+
 covid.enter(({ reply }) => {
   return reply(
     "Selamat Data di Covid-19 Indonesia data. pilih data yang akan dilihat",
-    Markup.keyboard([
-      "Jumlah Semua Kasus",
-      "Kasus per Provinsi",
-      "Kasus Perhari",
-      "back",
-    ])
+    Markup.keyboard(["Jumlah Semua Kasus", "Kasus per Provinsi", "home"])
       .oneTime()
       .resize()
       .extra()
@@ -49,6 +46,32 @@ covid.hears("Jumlah Semua Kasus", async (ctx) => {
     await ctx.reply(covidRes("Indonesia", data));
   });
 });
-covid.hears("back", (ctx) => ctx.scene.enter("home"));
+
+covid.hears("Kasus per Provinsi", ({ reply }) => {
+  return reply(
+    "Ketikan nama provinsi",
+    Markup.keyboard(["back"]).oneTime().resize().extra()
+  );
+});
+
+covid.on("text", async (ctx) => {
+  await Axios.get(url + "api/provinsi").then((datas) => {
+    if (ctx.message.text === "back") {
+      ctx.scene.enter("covid");
+    } else if (ctx.message.text === "home") {
+      ctx.scene.enter("home");
+    }
+    const data = datas.data.data;
+    const userRegion = String(ctx.message.text).toLowerCase();
+    data.map((value) => {
+      const region = String(value.provinsi).toLowerCase();
+      if (region === userRegion || region.includes(userRegion)) {
+        console.log(value);
+        const msg = `Data covid-19 di ${value.provinsi} \n ${dateNow} \n Kasus Positif : ${value.kasusPosi} \n Kasus Sembuh :  ${value.kasusSemb} \n Kasus Meninggal : ${value.kasusMeni}`;
+        ctx.reply(msg);
+      }
+    });
+  });
+});
 
 module.exports = { home, covid };
