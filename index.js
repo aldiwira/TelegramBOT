@@ -1,15 +1,23 @@
 const { Telegraf } = require("telegraf");
+const session = require("telegraf/session");
+const Stage = require("telegraf/stage");
+const Scene = require("telegraf/scenes/base");
+const Markup = require("telegraf/markup");
 require("dotenv").config();
 
-const rply = require("./templateReply.json");
 const bot = new Telegraf(process.env.tokenBOT);
+const { home, covid } = require("./scene");
 
-bot.start((ctx) => {
-  ctx.reply(rply.greeting);
-});
+//stage installation
+const stage = new Stage([home, covid]);
 
-bot.catch((err, ctx) => {
-  console.log(`Ooops, encountered an error for ${ctx.updateType}`, err);
+bot.use(session());
+bot.use(Telegraf.log());
+bot.use(stage.middleware());
+
+bot.start(async (ctx) => {
+  await ctx.reply("Selamat datang di BOT Suka Suka");
+  await ctx.scene.enter("home");
 });
 
 bot.launch();
