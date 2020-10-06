@@ -12,11 +12,12 @@ const { home, covid } = require("./scene");
 const stage = new Stage([home, covid]);
 
 bot.use(session());
-bot.use(Telegraf.log());
+(process.env.NODE_ENV === 'development'?bot.use(Telegraf.log()):null)
 bot.use(stage.middleware());
 
 bot.start(async (ctx) => {
-  await ctx.reply("Selamat datang di BOT Suka Suka");
+  await ctx.reply(`Selamat datang ${ctx.chat.first_name} di BOT Suka Suka`);
+  console.log(`Session start by ${ctx.chat.first_name}`)
   await ctx.scene.enter("home");
 });
 
