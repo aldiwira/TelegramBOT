@@ -5,18 +5,6 @@ const moment = require("moment");
 
 moment.locale("id");
 const dateNow = moment().format("dddd, Do MMMM YYYY");
-//home
-const home = new Scene("home");
-home.enter(({ reply }) => {
-  return reply(
-    "Pilih layanan yang akan dibuka",
-    Markup.keyboard(["Covid-19", "Weather (On Going)"])
-      .oneTime()
-      .resize()
-      .extra()
-  );
-});
-home.hears("Covid-19", async (ctx) => ctx.scene.enter("covid"));
 
 //Covid
 const url = "https://indonesia-covid-19.mathdro.id/";
@@ -29,6 +17,7 @@ const covidRes = (location, data) => {
     data.jumlahKasus
   }`;
 };
+
 const covid = new Scene("covid");
 
 covid.enter(({ reply }) => {
@@ -74,4 +63,4 @@ covid.on("text", async (ctx) => {
   });
 });
 
-module.exports = { home, covid };
+module.exports = covid;
