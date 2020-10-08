@@ -22,4 +22,8 @@ bot.start(async (ctx) => {
   await ctx.scene.enter("home");
 });
 
+bot.catch((err, ctx) => {
+  console.log(`Ooops, encountered an error for ${ctx.updateType}`, err);
+});
+
 bot.launch();

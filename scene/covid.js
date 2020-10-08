@@ -7,59 +7,26 @@ moment.locale("id");
 const dateNow = moment().format("dddd, Do MMMM YYYY");
 
 //Covid
-const url = "https://indonesia-covid-19.mathdro.id/";
-const covidRes = (location, data) => {
-  return `Data Covid-19 di ${location} \n ${moment().format(
-    "dddd, Do MMMM YYYY"
-  )} \n Meninggal : ${data.meninggal} \n Sembuh : ${
-    data.sembuh
-  } \n Dalam Perawatan : ${data.perawatan} \n Jumlah seluruh kasus : ${
-    data.jumlahKasus
-  }`;
-};
+const url = "https://api.kawalcorona.com/";
 
 const covid = new Scene("covid");
 
+const listMenu = ["Jumlah Semua Kasus", "Kasus per Provinsi", "home"];
+
 covid.enter(({ reply }) => {
   return reply(
-    "Selamat Data di Covid-19 Indonesia data. pilih data yang akan dilihat",
-    Markup.keyboard(["Jumlah Semua Kasus", "Kasus per Provinsi", "home"])
-      .oneTime()
-      .resize()
-      .extra()
-  );
-});
-covid.hears("Jumlah Semua Kasus", async (ctx) => {
-  await Axios.get(url + "api").then(async (datas) => {
-    const data = datas.data;
-    await ctx.reply(covidRes("Indonesia", data));
-  });
-});
-
-covid.hears("Kasus per Provinsi", ({ reply }) => {
-  return reply(
-    "Ketikan nama provinsi",
-    Markup.keyboard(["back"]).oneTime().resize().extra()
+    "Selamat Datang di Covid-19 Indonesia data. pilih data yang akan dilihat",
+    Markup.keyboard(listMenu).oneTime().resize().extra()
   );
 });
 
-covid.on("text", async (ctx) => {
-  await Axios.get(url + "api/provinsi").then((datas) => {
-    if (ctx.message.text === "back") {
-      ctx.scene.enter("covid");
-    } else if (ctx.message.text === "home") {
-      ctx.scene.enter("home");
+covid.hears(listMenu[0], async (ctx) => {
+  await Axios.get(url + "indonesia").then((datas) => {
+    if (datas.status === 200) {
+      const covidData = datas.data[0];
+      const response = `Data Covid-19 di ${covidData.name} \nKasus positif : ${covidData.positif}\nKasus Sembuh : ${covidData.sembuh}\nKasus Meninggal : ${covidData.meninggal}\nMasih dirawat : ${covidData.dirawat} `;
+      ctx.reply(response);
     }
-    const data = datas.data.data;
-    const userRegion = String(ctx.message.text).toLowerCase();
-    data.map((value) => {
-      const region = String(value.provinsi).toLowerCase();
-      if (region === userRegion || region.includes(userRegion)) {
-        console.log(value);
-        const msg = `Data covid-19 di ${value.provinsi} \n ${dateNow} \n Kasus Positif : ${value.kasusPosi} \n Kasus Sembuh :  ${value.kasusSemb} \n Kasus Meninggal : ${value.kasusMeni}`;
-        ctx.reply(msg);
-      }
-    });
   });
 });
 
