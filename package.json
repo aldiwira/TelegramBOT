@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "dev" : "nodemon index.js"
+    "dev": "nodemon index.js"
   },
   "author": "Aldi Wirawan",
   "license": "ISC",
@@ -14,7 +14,8 @@
     "axios": "^0.20.0",
     "dotenv": "^8.2.0",
     "moment": "^2.29.0",
-    "telegraf": "^3.38.0"
+    "telegraf": "^3.38.0",
+    "xml-js": "^1.6.11"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"

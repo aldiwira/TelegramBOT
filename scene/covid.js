@@ -24,7 +24,7 @@ covid.hears(listMenu[0], async (ctx) => {
   await Axios.get(url + "indonesia").then((datas) => {
     if (datas.status === 200) {
       const covidData = datas.data[0];
-      const response = `Data Covid-19 di ${covidData.name} \nKasus positif : ${covidData.positif}\nKasus Sembuh : ${covidData.sembuh}\nKasus Meninggal : ${covidData.meninggal}\nMasih dirawat : ${covidData.dirawat} `;
+      const response = `Data Covid-19 di ${covidData.name} \nKasus positif : ${covidData.positif}\nKasus Sembuh : ${covidData.sembuh}\nKasus Meninggal : ${covidData.meninggal}\nMasih dirawat : ${covidData.dirawat}\nUpdate : ${dateNow} `;
       ctx.reply(response);
     }
   });
@@ -52,7 +52,7 @@ covid.on("text", async (ctx) => {
         const inputProv = String(ctx.message.text).toLowerCase();
         const dataProv = String(attr.Provinsi).toLowerCase();
         if (dataProv.includes(inputProv)) {
-          const msg = `Data kasus covid-19 di ${attr.Provinsi}\nKasus Positif : ${attr.Kasus_Posi}\nKasus yang sembuh : ${attr.Kasus_Semb}\nKasus yang meninggal : ${attr.Kasus_Meni} `;
+          const msg = `Data kasus covid-19 di ${attr.Provinsi}\nKasus Positif : ${attr.Kasus_Posi}\nKasus yang sembuh : ${attr.Kasus_Semb}\nKasus yang meninggal : ${attr.Kasus_Meni}\nUpdate : ${dateNow}  `;
           ctx.reply(msg);
         }
       });

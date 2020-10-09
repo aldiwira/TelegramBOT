@@ -3,15 +3,14 @@ const Markup = require("telegraf/markup");
 
 //home
 const home = new Scene("home");
+const list = ["Covid-19", "Info Gempa bumi"];
 home.enter(({ reply }) => {
   return reply(
     "Pilih layanan yang akan dibuka",
-    Markup.keyboard(["Covid-19", "Weather (On Going)"])
-      .oneTime()
-      .resize()
-      .extra()
+    Markup.keyboard(list).oneTime().resize().extra()
   );
 });
-home.hears("Covid-19", async (ctx) => ctx.scene.enter("covid"));
+home.hears(list[0], async (ctx) => await ctx.scene.enter("covid"));
+home.hears(list[1], async (ctx) => await ctx.scene.enter("earthquake"));
 
 module.exports = home;
