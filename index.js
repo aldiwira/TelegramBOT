@@ -12,6 +12,7 @@ const earthquake = require("./scene/earthquake");
 const appPress = express();
 const TOKEN = process.env.tokenBOT;
 const bot = new Telegraf(TOKEN);
+
 //stage installation
 const stage = new Stage([home, covid, earthquake]);
 
