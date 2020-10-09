@@ -1,16 +1,15 @@
 const { Telegraf } = require("telegraf");
 const session = require("telegraf/session");
 const Stage = require("telegraf/stage");
-const Scene = require("telegraf/scenes/base");
-const Markup = require("telegraf/markup");
 require("dotenv").config();
 
 const bot = new Telegraf(process.env.tokenBOT);
 const home = require("./scene/home");
 const covid = require("./scene/covid");
+const earthquake = require("./scene/earthquake");
 
 //stage installation
-const stage = new Stage([home, covid]);
+const stage = new Stage([home, covid, earthquake]);
 
 bot.use(session());
 process.env.NODE_ENV === "development" ? bot.use(Telegraf.log()) : null;
@@ -26,4 +25,4 @@ bot.catch((err, ctx) => {
   console.log(`Ooops, encountered an error for ${ctx.updateType}`, err);
 });
 
-bot.launch();
+bot.startPolling();
