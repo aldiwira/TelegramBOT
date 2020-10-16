@@ -7,6 +7,7 @@ require("dotenv").config();
 const home = require("./scene/home");
 const covid = require("./scene/covid");
 const earthquake = require("./scene/earthquake");
+const quran = require("./scene/alquran");
 
 //webhook and bot initial
 const appPress = express();
@@ -14,7 +15,7 @@ const TOKEN = process.env.tokenBOT;
 const bot = new Telegraf(TOKEN);
 
 //stage installation
-const stage = new Stage([home, covid, earthquake]);
+const stage = new Stage([home, covid, earthquake, quran]);
 
 bot.use(session());
 process.env.NODE_ENV === "development" ? bot.use(Telegraf.log()) : null;
