@@ -51,6 +51,11 @@ quran.on("text", async (ctx) => {
         });
       }
     });
+  } else {
+    await ctx.reply(
+      "Al Quran dan Terjemaah",
+      Markup.keyboard(listMenu).oneTime().resize().extra()
+    );
   }
 });
 
