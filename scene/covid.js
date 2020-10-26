@@ -32,6 +32,7 @@ covid.hears(listMenu[0], async (ctx) => {
 
 //province covid data
 covid.hears(listMenu[1], async ({ reply }) => {
+  ctx.session.typeSearch = "namaProvinsi";
   return reply(
     "Ketikan nama provinsi",
     Markup.keyboard(["back"]).oneTime().resize().extra()
@@ -44,20 +45,27 @@ covid.on("text", async (ctx) => {
   } else if (ctx.message.text === "home") {
     ctx.scene.enter("home");
   }
-  await Axios.get(url + "indonesia/provinsi/").then((datas) => {
-    if (datas.status === 200) {
-      const provDatas = datas.data;
-      provDatas.map((data) => {
-        const attr = data.attributes;
-        const inputProv = String(ctx.message.text).toLowerCase();
-        const dataProv = String(attr.Provinsi).toLowerCase();
-        if (dataProv.includes(inputProv)) {
-          const msg = `Data kasus covid-19 di ${attr.Provinsi}\nKasus Positif : ${attr.Kasus_Posi}\nKasus yang sembuh : ${attr.Kasus_Semb}\nKasus yang meninggal : ${attr.Kasus_Meni}\nUpdate : ${dateNow}  `;
-          ctx.reply(msg);
-        }
-      });
-    }
-  });
+  if (ctx.session.typeSearch === "namaProvinsi") {
+    await Axios.get(url + "indonesia/provinsi/").then((datas) => {
+      if (datas.status === 200) {
+        const provDatas = datas.data;
+        provDatas.map((data) => {
+          const attr = data.attributes;
+          const inputProv = String(ctx.message.text).toLowerCase();
+          const dataProv = String(attr.Provinsi).toLowerCase();
+          if (dataProv.includes(inputProv)) {
+            const msg = `Data kasus covid-19 di ${attr.Provinsi}\nKasus Positif : ${attr.Kasus_Posi}\nKasus yang sembuh : ${attr.Kasus_Semb}\nKasus yang meninggal : ${attr.Kasus_Meni}\nUpdate : ${dateNow}  `;
+            ctx.reply(msg);
+          }
+        });
+      }
+    });
+  } else {
+    ctx.reply(
+      "Selamat Datang di Covid-19 Indonesia data. pilih data yang akan dilihat",
+      Markup.keyboard(listMenu).oneTime().resize().extra()
+    );
+  }
 });
 
 module.exports = covid;
