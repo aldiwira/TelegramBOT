@@ -32,7 +32,6 @@ eqScene.hears(homeList[0], async (ctx) => {
       Bujur: String(infoGempa.point.coordinates._text).split(",")[1],
     };
     await ctx.reply("Informasi gempa hari ini");
-    await ctx.replyWithLocation(location.Bujur, location.Lintang);
     await ctx.replyWithAnimation({ url: "https://data.bmkg.go.id/eqmap.gif" });
     const resText = `Waktu Kejadian \nTanggal : ${infoGempa.Tanggal._text}\nJam : ${infoGempa.Jam._text}\n\nKoordinat\nLintang : ${location.Lintang}\nBujur : ${location.Bujur}\n\nData Gempa \nKekuatan Gempa : ${infoGempa.Magnitude._text}\nKedalaman Gempa : ${infoGempa.Kedalaman._text}\n${infoGempa.Potensi._text}\n\nRincian Lokasi : \n${infoGempa.Wilayah1._text}\n${infoGempa.Wilayah2._text}\n${infoGempa.Wilayah3._text}\n${infoGempa.Wilayah4._text}\n${infoGempa.Wilayah5._text}`;
     await ctx.reply(resText);
